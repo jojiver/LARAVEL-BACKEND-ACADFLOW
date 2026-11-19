@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Alex Morgan',
                 'password' => Hash::make('Password123'),
-                'student_id' => '2026-01234',
-                'program' => 'BS Information Technology',
-                'year_level' => '2nd Year',
+                'student_id' => null,
+                'program' => 'BSIT',
+                'year_level' => '4th Year',
                 'role' => 'STUDENT',
             ],
         );

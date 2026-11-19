@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -15,10 +16,10 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:2', 'max:120'],
-            'studentId' => ['required', 'string', 'max:50'],
+            'studentId' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:190', 'unique:users,email'],
-            'program' => ['required', 'string', 'max:120'],
-            'yearLevel' => ['required', 'string', 'max:50'],
+            'program' => ['required', 'string', Rule::in(['BSIT', 'BSCS', 'BSIS', 'Other'])],
+            'yearLevel' => ['required', 'string', Rule::in(['1st Year', '2nd Year', '3rd Year', '4th Year'])],
             'password' => [
                 'required',
                 'string',
