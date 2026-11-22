@@ -16,4 +16,8 @@ interface AuthRepositoryInterface
     public function findToken(string $tokenHash): ?ApiToken;
 
     public function deleteToken(ApiToken $token): void;
+
+    public function updateUser(User $user, array $data): User;
+
+    public function deleteOtherTokens(User $user, ?int $exceptTokenId = null): void;
 }

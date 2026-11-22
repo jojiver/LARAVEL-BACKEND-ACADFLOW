@@ -45,6 +45,65 @@ class AuthService
         $this->auth->deleteToken($token);
     }
 
+    public function updateProfile(User $user, array $data): User
+    {
+        return $this->auth->updateUser($user, [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'program' => $data['program'],
+            'year_level' => $data['yearLevel'],
+            'academic_term' => $data['academicTerm'] ?? null,
+        ]);
+    }
+
+    public function changePassword(
+        User $user,
+        string $currentPassword,
+        string $newPassword,
+        ?ApiToken $currentToken = null,
+    ): bool {
+        if (! Hash::check($currentPassword, $user->password)) {
+            return false;
+        }
+
+        $this->auth->updateUser($user, ['password' => $newPassword]);
+        $this->auth->deleteOtherTokens($user, $currentToken?->id);
+
+        return true;
+    }
+
+    public function preferences(User $user): array
+    {
+        return [
+            'deadline' => (bool) $user->notify_deadline,
+            'class' => (bool) $user->notify_class,
+            'priority' => (bool) $user->notify_priority,
+            'workload' => (bool) $user->notify_workload,
+            'timing' => $user->reminder_timing ?? '1h',
+        ];
+    }
+
+    public function updatePreferences(User $user, array $data): array
+    {
+        $attributes = [];
+
+        foreach ([
+            'deadline' => 'notify_deadline',
+            'class' => 'notify_class',
+            'priority' => 'notify_priority',
+            'workload' => 'notify_workload',
+            'timing' => 'reminder_timing',
+        ] as $input => $column) {
+            if (array_key_exists($input, $data)) {
+                $attributes[$column] = $data[$input];
+            }
+        }
+
+        $this->auth->updateUser($user, $attributes);
+
+        return $this->preferences($user);
+    }
+
     public function authenticate(string $plainToken): ?array
     {
         $token = $this->auth->findToken(hash('sha256', $plainToken));

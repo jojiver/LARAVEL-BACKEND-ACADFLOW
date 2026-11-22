@@ -58,6 +58,12 @@ class User extends Authenticatable
         'student_id',
         'program',
         'year_level',
+        'academic_term',
+        'notify_deadline',
+        'notify_class',
+        'notify_priority',
+        'notify_workload',
+        'reminder_timing',
         'role',
     ];
 
@@ -81,6 +87,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'notify_deadline' => 'boolean',
+            'notify_class' => 'boolean',
+            'notify_priority' => 'boolean',
+            'notify_workload' => 'boolean',
         ];
     }
 }

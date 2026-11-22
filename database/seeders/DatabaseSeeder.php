@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
                 'student_id' => null,
                 'program' => 'BSIT',
                 'year_level' => '4th Year',
+                'academic_term' => '1st Semester',
                 'role' => 'STUDENT',
             ],
         );

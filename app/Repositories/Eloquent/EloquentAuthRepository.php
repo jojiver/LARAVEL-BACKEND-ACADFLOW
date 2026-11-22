@@ -37,4 +37,22 @@ class EloquentAuthRepository implements AuthRepositoryInterface
     {
         $token->delete();
     }
+
+    public function updateUser(User $user, array $data): User
+    {
+        $user->fill($data)->save();
+
+        return $user->refresh();
+    }
+
+    public function deleteOtherTokens(User $user, ?int $exceptTokenId = null): void
+    {
+        $query = $user->apiTokens();
+
+        if ($exceptTokenId !== null) {
+            $query->whereKeyNot($exceptTokenId);
+        }
+
+        $query->delete();
+    }
 }

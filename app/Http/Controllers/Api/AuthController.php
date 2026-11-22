@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Models\ApiToken;
 use App\Services\AuthService;
@@ -94,5 +96,36 @@ class AuthController extends Controller
         AuthCookie::clear($response);
 
         return $response;
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $this->auth->updateProfile($request->user(), $request->validated());
+
+        return response()->json([
+            'data' => ['user' => new UserResource($user)],
+        ]);
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        /** @var ApiToken|null $token */
+        $token = $request->attributes->get('api_token');
+        $data = $request->validated();
+
+        $changed = $this->auth->changePassword(
+            $request->user(),
+            $data['currentPassword'],
+            $data['password'],
+            $token,
+        );
+
+        if (! $changed) {
+            return response()->json([
+                'message' => 'The current password is incorrect.',
+            ], 422);
+        }
+
+        return response()->json(['data' => ['ok' => true]]);
     }
 }

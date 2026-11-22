@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\ScheduleImportController;
+use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -22,10 +23,17 @@ Route::prefix('auth/v1')->group(function () {
     Route::middleware('api.token')->group(function () {
         Route::get('/session', [AuthController::class, 'session']);
         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::patch('/profile', [AuthController::class, 'updateProfile']);
+        Route::post('/change-password', [AuthController::class, 'changePassword']);
     });
 });
 
 Route::middleware('api.token')->group(function () {
+    Route::prefix('settings/v1')->group(function () {
+        Route::get('/preferences', [SettingsController::class, 'preferences']);
+        Route::patch('/preferences', [SettingsController::class, 'updatePreferences']);
+    });
+
     Route::prefix('subjects/v1')->group(function () {
         Route::get('/get-subjects', [SubjectController::class, 'index']);
         Route::get('/get-subject/{subject}', [SubjectController::class, 'show']);

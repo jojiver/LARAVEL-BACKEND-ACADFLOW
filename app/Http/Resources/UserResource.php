@@ -17,6 +17,7 @@ class UserResource extends JsonResource
             'studentId' => $this->student_id,
             'program' => $this->program,
             'yearLevel' => $this->year_level,
+            'academicTerm' => $this->academic_term,
         ];
     }
 }
