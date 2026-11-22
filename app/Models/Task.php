@@ -23,6 +23,7 @@ class Task extends Model
         'completed_at',
     ];
 
+    /** Defines attribute casting for this model. */
     protected function casts(): array
     {
         return [
@@ -33,16 +34,19 @@ class Task extends Model
         ];
     }
 
+    /** Defines the user relationship. */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** Defines the subject relationship. */
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
 
+    /** Defines the steps relationship. */
     public function steps(): HasMany
     {
         return $this->hasMany(TaskStep::class)->orderBy('position');

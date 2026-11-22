@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ScheduleService
 {
+    /** Initializes the ScheduleService dependencies. */
     public function __construct(
         private readonly ScheduleRepositoryInterface $schedules,
     ) {}
 
+    /** Returns the list of records for a user. */
     public function list(int $userId): Collection
     {
         return $this->schedules->allForUser($userId);
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data): ClassSchedule
     {
         return $this->schedules->create($userId, [
@@ -28,6 +31,7 @@ class ScheduleService
         ]);
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(int $scheduleId, int $userId, array $data): ?ClassSchedule
     {
         $schedule = $this->schedules->findForUser($scheduleId, $userId);
@@ -52,6 +56,7 @@ class ScheduleService
         return $this->schedules->update($schedule, $attributes);
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(int $scheduleId, int $userId): bool
     {
         $schedule = $this->schedules->findForUser($scheduleId, $userId);

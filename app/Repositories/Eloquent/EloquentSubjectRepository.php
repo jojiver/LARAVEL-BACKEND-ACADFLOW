@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class EloquentSubjectRepository implements SubjectRepositoryInterface
 {
+    /** Returns all EloquentSubjectRepository records owned by a user. */
     public function allForUser(int $userId): Collection
     {
         return Subject::query()
@@ -16,6 +17,7 @@ class EloquentSubjectRepository implements SubjectRepositoryInterface
             ->get();
     }
 
+    /** Finds one EloquentSubjectRepository record owned by a user. */
     public function findForUser(int $subjectId, int $userId): ?Subject
     {
         return Subject::query()
@@ -23,6 +25,7 @@ class EloquentSubjectRepository implements SubjectRepositoryInterface
             ->find($subjectId);
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data): Subject
     {
         return Subject::query()->create([
@@ -31,6 +34,7 @@ class EloquentSubjectRepository implements SubjectRepositoryInterface
         ]);
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(Subject $subject, array $data): Subject
     {
         $subject->fill($data)->save();
@@ -38,6 +42,7 @@ class EloquentSubjectRepository implements SubjectRepositoryInterface
         return $subject->refresh();
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(Subject $subject): void
     {
         $subject->delete();

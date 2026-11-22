@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Performs up in 2026_01_01_000002_create_api_tokens_table. */
     public function up(): void
     {
         Schema::create('api_tokens', function (Blueprint $table) {
@@ -19,6 +20,7 @@ return new class extends Migration
         });
     }
 
+    /** Performs down in 2026_01_01_000002_create_api_tokens_table. */
     public function down(): void
     {
         Schema::dropIfExists('api_tokens');

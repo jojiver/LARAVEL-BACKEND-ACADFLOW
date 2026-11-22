@@ -14,6 +14,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /** Registers repository interface bindings. */
     public function register(): void
     {
         $this->app->bind(AuthRepositoryInterface::class, EloquentAuthRepository::class);
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TaskRepositoryInterface::class, EloquentTaskRepository::class);
     }
 
+    /** Runs provider boot logic. */
     public function boot(): void
     {
         //

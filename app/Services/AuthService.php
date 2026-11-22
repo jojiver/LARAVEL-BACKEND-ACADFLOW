@@ -10,10 +10,12 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
+    /** Initializes the AuthService dependencies. */
     public function __construct(
         private readonly AuthRepositoryInterface $auth,
     ) {}
 
+    /** Creates a user account and starts a session. */
     public function register(array $data): array
     {
         $user = $this->auth->createUser([
@@ -29,6 +31,7 @@ class AuthService
         return [$user, $this->issueToken($user)];
     }
 
+    /** Authenticates credentials and issues a session cookie. */
     public function login(string $email, string $password): ?array
     {
         $user = $this->auth->findByEmail($email);
@@ -40,11 +43,13 @@ class AuthService
         return [$user, $this->issueToken($user)];
     }
 
+    /** Revokes the current token and clears the auth cookie. */
     public function logout(ApiToken $token): void
     {
         $this->auth->deleteToken($token);
     }
 
+    /** Updates the authenticated user profile. */
     public function updateProfile(User $user, array $data): User
     {
         return $this->auth->updateUser($user, [
@@ -56,6 +61,7 @@ class AuthService
         ]);
     }
 
+    /** Verifies the current password and changes it. */
     public function changePassword(
         User $user,
         string $currentPassword,
@@ -72,6 +78,7 @@ class AuthService
         return true;
     }
 
+    /** Returns saved notification preferences. */
     public function preferences(User $user): array
     {
         return [
@@ -83,6 +90,7 @@ class AuthService
         ];
     }
 
+    /** Updates saved notification preferences. */
     public function updatePreferences(User $user, array $data): array
     {
         $attributes = [];
@@ -104,6 +112,7 @@ class AuthService
         return $this->preferences($user);
     }
 
+    /** Finds and authenticates a plain API token. */
     public function authenticate(string $plainToken): ?array
     {
         $token = $this->auth->findToken(hash('sha256', $plainToken));
@@ -115,6 +124,7 @@ class AuthService
         return [$token, $token->user];
     }
 
+    /** Creates a new hashed API token for a user. */
     private function issueToken(User $user): string
     {
         $plainToken = Str::random(60);

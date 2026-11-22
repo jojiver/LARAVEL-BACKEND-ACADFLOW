@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Performs up in 2026_01_01_000004_create_task_steps_table. */
     public function up(): void
     {
         Schema::create('task_steps', function (Blueprint $table) {
@@ -20,6 +21,7 @@ return new class extends Migration
         });
     }
 
+    /** Performs down in 2026_01_01_000004_create_task_steps_table. */
     public function down(): void
     {
         Schema::dropIfExists('task_steps');

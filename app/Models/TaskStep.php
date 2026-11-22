@@ -14,6 +14,7 @@ class TaskStep extends Model
         'position',
     ];
 
+    /** Defines attribute casting for this model. */
     protected function casts(): array
     {
         return [
@@ -22,6 +23,7 @@ class TaskStep extends Model
         ];
     }
 
+    /** Performs task in TaskStep. */
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);

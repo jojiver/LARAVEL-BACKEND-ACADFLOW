@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SubjectResource extends JsonResource
 {
+    /** Serializes the model into the API response shape. */
     public function toArray(Request $request): array
     {
         return [

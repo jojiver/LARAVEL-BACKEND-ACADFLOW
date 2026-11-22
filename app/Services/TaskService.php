@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TaskService
 {
+    /** Initializes the TaskService dependencies. */
     public function __construct(
         private readonly TaskRepositoryInterface $tasks,
     ) {}
 
+    /** Returns the list of records for a user. */
     public function list(int $userId): Collection
     {
         return $this->tasks->allForUser($userId)->each(
@@ -20,6 +22,7 @@ class TaskService
         );
     }
 
+    /** Finds one record owned by a user. */
     public function find(int $taskId, int $userId): ?Task
     {
         $task = $this->tasks->findForUser($taskId, $userId);
@@ -31,6 +34,7 @@ class TaskService
         return $task;
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data): Task
     {
         $steps = $data['steps'] ?? null;
@@ -54,6 +58,7 @@ class TaskService
         return $task;
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(int $taskId, int $userId, array $data): ?Task
     {
         $task = $this->tasks->findForUser($taskId, $userId);
@@ -85,6 +90,7 @@ class TaskService
         return $updated;
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(int $taskId, int $userId): bool
     {
         $task = $this->tasks->findForUser($taskId, $userId);
@@ -98,6 +104,7 @@ class TaskService
         return true;
     }
 
+    /** Calculates productivity statistics for a period. */
     public function productivity(int $userId, string $period): array
     {
         $all = $this->tasks->allForUser($userId)->each(
@@ -141,6 +148,7 @@ class TaskService
         ];
     }
 
+    /** Maps request fields to database column names. */
     private function attributes(array $data): array
     {
         $map = [
@@ -166,6 +174,7 @@ class TaskService
         return $attributes;
     }
 
+    /** Calculates progress from checklist steps. */
     private function progress(int $fallback, ?array $steps): int
     {
         if ($steps === null || count($steps) === 0) {
@@ -177,6 +186,7 @@ class TaskService
         return (int) round(($done / count($steps)) * 100);
     }
 
+    /** Returns the completion time when work is done. */
     private function completedAt(string $status, int $progress): mixed
     {
         return $status === 'Completed' || $progress >= 100 ? now() : null;

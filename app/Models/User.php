@@ -14,6 +14,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    /** Returns initials for the user's avatar. */
     public function initials(): string
     {
         $parts = preg_split('/\s+/', trim($this->name)) ?: [];
@@ -26,21 +27,25 @@ class User extends Authenticatable
         return $initials !== '' ? $initials : 'U';
     }
 
+    /** Defines the tasks relationship. */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
     }
 
+    /** Performs subjects in User. */
     public function subjects(): HasMany
     {
         return $this->hasMany(Subject::class);
     }
 
+    /** Defines the classSchedules relationship. */
     public function classSchedules(): HasMany
     {
         return $this->hasMany(ClassSchedule::class);
     }
 
+    /** Defines the apiTokens relationship. */
     public function apiTokens(): HasMany
     {
         return $this->hasMany(ApiToken::class);

@@ -13,6 +13,7 @@ class ApiToken extends Model
         'last_used_at',
     ];
 
+    /** Defines attribute casting for this model. */
     protected function casts(): array
     {
         return [
@@ -20,6 +21,7 @@ class ApiToken extends Model
         ];
     }
 
+    /** Defines the user relationship. */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

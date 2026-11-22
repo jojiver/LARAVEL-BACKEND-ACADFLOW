@@ -12,10 +12,12 @@ use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
+    /** Initializes the SubjectController dependencies. */
     public function __construct(
         private readonly SubjectService $subjects,
     ) {}
 
+    /** Returns the list response for the authenticated user. */
     public function index(Request $request): JsonResponse
     {
         $subjects = $this->subjects->list($request->user()->id);
@@ -27,6 +29,7 @@ class SubjectController extends Controller
         ]);
     }
 
+    /** Returns one record owned by the authenticated user. */
     public function show(Request $request, int $subject): JsonResponse
     {
         $found = $this->subjects->find($subject, $request->user()->id);
@@ -40,6 +43,7 @@ class SubjectController extends Controller
         ]);
     }
 
+    /** Creates a new record for the authenticated user. */
     public function store(StoreSubjectRequest $request): JsonResponse
     {
         $subject = $this->subjects->create($request->user()->id, $request->validated());
@@ -49,6 +53,7 @@ class SubjectController extends Controller
         ], 201);
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(UpdateSubjectRequest $request, int $subject): JsonResponse
     {
         $updated = $this->subjects->update($subject, $request->user()->id, $request->validated());
@@ -62,6 +67,7 @@ class SubjectController extends Controller
         ]);
     }
 
+    /** Deletes a record owned by the authenticated user. */
     public function destroy(Request $request, int $subject): JsonResponse
     {
         if (! $this->subjects->delete($subject, $request->user()->id)) {

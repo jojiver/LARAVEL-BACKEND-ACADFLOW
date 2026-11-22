@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class EloquentScheduleRepository implements ScheduleRepositoryInterface
 {
+    /** Returns all EloquentScheduleRepository records owned by a user. */
     public function allForUser(int $userId): Collection
     {
         return ClassSchedule::query()
@@ -18,6 +19,7 @@ class EloquentScheduleRepository implements ScheduleRepositoryInterface
             ->get();
     }
 
+    /** Finds one EloquentScheduleRepository record owned by a user. */
     public function findForUser(int $scheduleId, int $userId): ?ClassSchedule
     {
         return ClassSchedule::query()
@@ -26,6 +28,7 @@ class EloquentScheduleRepository implements ScheduleRepositoryInterface
             ->find($scheduleId);
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data): ClassSchedule
     {
         $schedule = ClassSchedule::query()->create([
@@ -36,6 +39,7 @@ class EloquentScheduleRepository implements ScheduleRepositoryInterface
         return $schedule->load('subject');
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(ClassSchedule $schedule, array $data): ClassSchedule
     {
         $schedule->fill($data)->save();
@@ -43,6 +47,7 @@ class EloquentScheduleRepository implements ScheduleRepositoryInterface
         return $schedule->refresh()->load('subject');
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(ClassSchedule $schedule): void
     {
         $schedule->delete();

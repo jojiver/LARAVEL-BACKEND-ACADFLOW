@@ -18,16 +18,19 @@ class Subject extends Model
         'color',
     ];
 
+    /** Defines the user relationship. */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** Defines the tasks relationship. */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
     }
 
+    /** Defines the classSchedules relationship. */
     public function classSchedules(): HasMany
     {
         return $this->hasMany(ClassSchedule::class);

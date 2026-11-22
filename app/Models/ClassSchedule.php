@@ -16,11 +16,13 @@ class ClassSchedule extends Model
         'room',
     ];
 
+    /** Defines the user relationship. */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** Defines the subject relationship. */
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);

@@ -7,11 +7,13 @@ use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
+    /** Authorizes the request before validation runs. */
     public function authorize(): bool
     {
         return true;
     }
 
+    /** Returns the validation rules for this request. */
     public function rules(): array
     {
         return [

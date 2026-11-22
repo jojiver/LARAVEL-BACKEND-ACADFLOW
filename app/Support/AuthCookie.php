@@ -8,6 +8,7 @@ class AuthCookie
 {
     public const NAME = 'accessToken';
 
+    /** Performs set in AuthCookie. */
     public static function set(JsonResponse $response, string $token): void
     {
         $response->headers->setCookie(cookie(
@@ -23,6 +24,7 @@ class AuthCookie
         ));
     }
 
+    /** Performs clear in AuthCookie. */
     public static function clear(JsonResponse $response): void
     {
         $response->headers->setCookie(cookie()->forget(

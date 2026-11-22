@@ -48,11 +48,13 @@ class PriorityCalculator
         ];
     }
 
+    /** Performs clamp in PriorityCalculator. */
     private static function clamp(int $value, int $min, int $max): int
     {
         return min($max, max($min, $value));
     }
 
+    /** Performs deadline note in PriorityCalculator. */
     private static function deadlineNote(int $days): string
     {
         if ($days < 0) return abs($days).'d overdue';

@@ -11,10 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticateApiToken
 {
+    /** Initializes the AuthenticateApiToken dependencies. */
     public function __construct(
         private readonly AuthService $auth,
     ) {}
 
+    /** Authenticates the request and passes it through. */
     public function handle(Request $request, Closure $next): Response
     {
         $plainToken = $request->bearerToken() ?: $request->cookie(AuthCookie::NAME);

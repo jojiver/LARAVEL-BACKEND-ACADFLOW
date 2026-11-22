@@ -17,10 +17,12 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    /** Initializes the AuthController dependencies. */
     public function __construct(
         private readonly AuthService $auth,
     ) {}
 
+    /** Returns a client CSRF token. */
     public function csrfToken(): JsonResponse
     {
         return response()->json([
@@ -28,6 +30,7 @@ class AuthController extends Controller
         ]);
     }
 
+    /** Creates an account, signs the user in and sets the cookie. */
     public function signup(RegisterRequest $request): JsonResponse
     {
         [$user, $token] = $this->auth->register($request->validated());
@@ -41,6 +44,7 @@ class AuthController extends Controller
         return $response;
     }
 
+    /** Authenticates credentials and issues a session cookie. */
     public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->auth->login(
@@ -65,6 +69,7 @@ class AuthController extends Controller
         return $response;
     }
 
+    /** Checks whether the current session cookie is still valid. */
     public function refresh(Request $request): JsonResponse
     {
         $plainToken = $request->cookie(AuthCookie::NAME) ?: $request->bearerToken();
@@ -76,6 +81,7 @@ class AuthController extends Controller
         return response()->json(['data' => ['ok' => true]]);
     }
 
+    /** Returns the currently authenticated user. */
     public function session(Request $request): JsonResponse
     {
         return response()->json([
@@ -83,6 +89,7 @@ class AuthController extends Controller
         ]);
     }
 
+    /** Revokes the current token and clears the auth cookie. */
     public function logout(Request $request): JsonResponse
     {
         /** @var ApiToken|null $token */
@@ -98,6 +105,7 @@ class AuthController extends Controller
         return $response;
     }
 
+    /** Updates the authenticated user profile. */
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
         $user = $this->auth->updateProfile($request->user(), $request->validated());
@@ -107,6 +115,7 @@ class AuthController extends Controller
         ]);
     }
 
+    /** Verifies the current password and changes it. */
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         /** @var ApiToken|null $token */

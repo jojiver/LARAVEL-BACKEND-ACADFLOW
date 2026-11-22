@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Performs up in 2026_01_01_000005_add_profile_settings_to_users_table. */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
@@ -18,6 +19,7 @@ return new class extends Migration
         });
     }
 
+    /** Performs down in 2026_01_01_000005_add_profile_settings_to_users_table. */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {

@@ -10,10 +10,12 @@ use Illuminate\Http\JsonResponse;
 
 class ScheduleImportController extends Controller
 {
+    /** Initializes the ScheduleImportController dependencies. */
     public function __construct(
         private readonly ScheduleImportService $imports,
     ) {}
 
+    /** Builds a preview from an uploaded schedule file. */
     public function preview(ImportScheduleRequest $request): JsonResponse
     {
         $result = $this->imports->preview(
@@ -24,6 +26,7 @@ class ScheduleImportController extends Controller
         return response()->json(['data' => $result]);
     }
 
+    /** Saves the selected imported schedule classes. */
     public function confirm(ConfirmScheduleImportRequest $request): JsonResponse
     {
         $result = $this->imports->confirm(

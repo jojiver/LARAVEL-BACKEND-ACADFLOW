@@ -17,12 +17,14 @@ use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class ScheduleImportService
 {
+    /** Initializes the ScheduleImportService dependencies. */
     public function __construct(
         private readonly ScheduleTextParser $parser,
         private readonly SubjectRepositoryInterface $subjects,
         private readonly ScheduleRepositoryInterface $schedules,
     ) {}
 
+    /** Builds a preview from an uploaded schedule file. */
     public function preview(int $userId, UploadedFile $file): array
     {
         $text = $this->extractText($file);
@@ -60,6 +62,7 @@ class ScheduleImportService
         ];
     }
 
+    /** Saves the selected imported schedule classes. */
     public function confirm(int $userId, array $classes): array
     {
         $existingSubjects = $this->subjects->allForUser($userId);
@@ -137,6 +140,7 @@ class ScheduleImportService
         ];
     }
 
+    /** Extracts text from an uploaded PDF or image. */
     private function extractText(UploadedFile $file): string
     {
         $extension = strtolower($file->getClientOriginalExtension());
@@ -151,6 +155,7 @@ class ScheduleImportService
         };
     }
 
+    /** Extracts text from a digital PDF. */
     private function pdfText(string $path): string
     {
         $binary = config('schedule_import.binaries.pdftotext');
@@ -173,6 +178,7 @@ class ScheduleImportService
         }
     }
 
+    /** Runs OCR on a preprocessed image. */
     private function ocrImage(string $path): string
     {
         $binary = config('schedule_import.binaries.tesseract');
@@ -199,6 +205,7 @@ class ScheduleImportService
         }
     }
 
+    /** Upscales and grayscales an image for OCR. */
     private function prepareImage(string $path): string
     {
         if (! extension_loaded('gd')) {
@@ -240,6 +247,7 @@ class ScheduleImportService
         return $output;
     }
 
+    /** Renders and OCRs a scanned PDF. */
     private function ocrPdf(string $path): string
     {
         $binary = config('schedule_import.binaries.pdftoppm') ?: $this->findBinary('pdftoppm');
@@ -283,6 +291,7 @@ class ScheduleImportService
         }
     }
 
+    /** Finds an OCR or PDF system binary. */
     private function findBinary(string $name): ?string
     {
         $candidates = [
@@ -313,6 +322,7 @@ class ScheduleImportService
         return null;
     }
 
+    /** Flags overlapping imported and existing classes. */
     private function markConflicts(array &$classes, Collection $existing): void
     {
         foreach ($classes as &$class) {
@@ -359,11 +369,13 @@ class ScheduleImportService
         }
     }
 
+    /** Checks whether two time ranges overlap. */
     private function overlaps(string $start, string $end, string $otherStart, string $otherEnd): bool
     {
         return $start < $otherEnd && $end > $otherStart;
     }
 
+    /** Validates the day and time range. */
     private function validTimeRange(string $day, string $start, string $end): bool
     {
         if (! in_array($day, ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], true)) {
@@ -381,6 +393,7 @@ class ScheduleImportService
         return $end > $start;
     }
 
+    /** Deletes a temporary directory recursively. */
     private function deleteDirectory(string $directory): void
     {
         if (! is_dir($directory)) {

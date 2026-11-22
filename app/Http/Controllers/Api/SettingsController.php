@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
+    /** Initializes the SettingsController dependencies. */
     public function __construct(
         private readonly AuthService $auth,
     ) {}
 
+    /** Returns saved notification preferences. */
     public function preferences(Request $request): JsonResponse
     {
         return response()->json([
@@ -23,6 +25,7 @@ class SettingsController extends Controller
         ]);
     }
 
+    /** Updates saved notification preferences. */
     public function updatePreferences(UpdatePreferencesRequest $request): JsonResponse
     {
         $preferences = $this->auth->updatePreferences(

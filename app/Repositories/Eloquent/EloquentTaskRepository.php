@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class EloquentTaskRepository implements TaskRepositoryInterface
 {
+    /** Returns all EloquentTaskRepository records owned by a user. */
     public function allForUser(int $userId): Collection
     {
         return Task::query()
@@ -18,6 +19,7 @@ class EloquentTaskRepository implements TaskRepositoryInterface
             ->get();
     }
 
+    /** Finds one EloquentTaskRepository record owned by a user. */
     public function findForUser(int $taskId, int $userId): ?Task
     {
         return Task::query()
@@ -26,6 +28,7 @@ class EloquentTaskRepository implements TaskRepositoryInterface
             ->find($taskId);
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data, ?array $steps): Task
     {
         return DB::transaction(function () use ($userId, $data, $steps) {
@@ -40,6 +43,7 @@ class EloquentTaskRepository implements TaskRepositoryInterface
         });
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(Task $task, array $data, ?array $steps): Task
     {
         return DB::transaction(function () use ($task, $data, $steps) {
@@ -53,11 +57,13 @@ class EloquentTaskRepository implements TaskRepositoryInterface
         });
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(Task $task): void
     {
         $task->delete();
     }
 
+    /** Replaces a task's checklist steps. */
     private function replaceSteps(Task $task, ?array $steps): void
     {
         $task->steps()->delete();

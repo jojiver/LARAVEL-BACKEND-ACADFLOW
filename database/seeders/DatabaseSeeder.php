@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    /** Seeds the demo user, subjects, schedules and tasks. */
     public function run(): void
     {
         if (! filter_var(env('SEED_DEMO', true), FILTER_VALIDATE_BOOL)) {

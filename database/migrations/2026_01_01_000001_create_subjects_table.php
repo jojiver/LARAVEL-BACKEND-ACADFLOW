@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Performs up in 2026_01_01_000001_create_subjects_table. */
     public function up(): void
     {
         Schema::create('subjects', function (Blueprint $table) {
@@ -23,6 +24,7 @@ return new class extends Migration
         });
     }
 
+    /** Performs down in 2026_01_01_000001_create_subjects_table. */
     public function down(): void
     {
         Schema::dropIfExists('subjects');

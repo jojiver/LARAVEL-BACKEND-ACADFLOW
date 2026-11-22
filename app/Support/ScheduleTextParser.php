@@ -14,6 +14,7 @@ class ScheduleTextParser
 
     private const ROOM_PATTERN = '/\b((?:lab(?:oratory)?|room|rm\.?|bldg\.?|building|tent)\s*[-#]?\s*[a-z0-9][a-z0-9-]*|online|virtual|hybrid)\b/i';
 
+    /** Parses raw schedule text into structured class rows. */
     public function parse(string $text): array
     {
         $lines = preg_split('/\R/', $text) ?: [];
@@ -101,6 +102,7 @@ class ScheduleTextParser
         ];
     }
 
+    /** Normalizes a line of OCR or PDF text. */
     private function clean(string $line): string
     {
         $line = str_replace(["\xC2\xA0", "\t"], ' ', $line);
@@ -110,11 +112,13 @@ class ScheduleTextParser
         return trim($line);
     }
 
+    /** Checks whether a line contains a time range. */
     private function hasRange(string $line): bool
     {
         return (bool) preg_match(self::RANGE_PATTERN, $line);
     }
 
+    /** Extracts weekday tokens from a line. */
     private function days(string $line): array
     {
         $days = [];
@@ -148,6 +152,7 @@ class ScheduleTextParser
         return array_values(array_unique($days));
     }
 
+    /** Maps a day token to its short weekday name. */
     private function dayName(string $token): string
     {
         return match (strtolower(substr($token, 0, 3))) {
@@ -160,6 +165,7 @@ class ScheduleTextParser
         };
     }
 
+    /** Expands compact tokens such as MWF or TTH. */
     private function compactDayTokens(string $token): array
     {
         $token = trim($token);
@@ -216,6 +222,7 @@ class ScheduleTextParser
         return array_values(array_unique($days));
     }
 
+    /** Removes day tokens from extracted text. */
     private function removeDays(string $text): string
     {
         $text = preg_replace(self::DAY_PATTERN, ' ', $text) ?? $text;
@@ -227,6 +234,7 @@ class ScheduleTextParser
         return trim($text, " \t\n\r\0\x0B-–—|,:;•");
     }
 
+    /** Parses and normalizes a start/end time range. */
     private function times(array $range): ?array
     {
         $group = fn (int $index) => isset($range[$index]) ? (string) $range[$index][0] : '';
@@ -269,6 +277,7 @@ class ScheduleTextParser
         return [$this->format24($start), $this->format24($end)];
     }
 
+    /** Normalizes an AM/PM marker. */
     private function meridiem(string $value): ?string
     {
         $value = strtolower(str_replace('.', '', trim($value)));
@@ -280,6 +289,7 @@ class ScheduleTextParser
         return str_starts_with($value, 'p') ? 'pm' : 'am';
     }
 
+    /** Converts an hour and minute to 24-hour minutes. */
     private function to24(int $hour, int $minute, ?string $meridiem): ?int
     {
         if ($hour > 23 || $minute > 59) {
@@ -297,11 +307,13 @@ class ScheduleTextParser
         return $hour * 60 + $minute;
     }
 
+    /** Formats minutes as HH:MM. */
     private function format24(int $minutes): string
     {
         return sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
     }
 
+    /** Formats 24-hour time as a readable time. */
     private function display(string $time): string
     {
         [$hour, $minute] = array_map('intval', explode(':', $time));
@@ -311,6 +323,7 @@ class ScheduleTextParser
         return $hour.':'.str_pad((string) $minute, 2, '0', STR_PAD_LEFT).' '.$suffix;
     }
 
+    /** Extracts the subject, room and room note. */
     private function subjectRoom(string $text): array
     {
         $rooms = [];
@@ -351,6 +364,7 @@ class ScheduleTextParser
         return [$subject !== '' ? $subject : 'Untitled class', $rooms[0] ?? null, $note];
     }
 
+    /** Chooses the subject code or title from parsed columns. */
     private function subjectFromSegments(array $segments): string
     {
         if ($segments === []) {
@@ -372,6 +386,7 @@ class ScheduleTextParser
         return $this->stripSubjectCode($subject);
     }
 
+    /** Applies known OCR code corrections. */
     private function normalizeSubjectCode(string $code): string
     {
         $code = mb_strtoupper(preg_replace('/\s+/u', ' ', trim($code)) ?? $code);
@@ -388,6 +403,7 @@ class ScheduleTextParser
         return $code;
     }
 
+    /** Detects whether a text segment looks like a code. */
     private function looksLikeSubjectCode(string $value): bool
     {
         $value = trim($value);
@@ -405,6 +421,7 @@ class ScheduleTextParser
             || mb_strlen($value) === 2;
     }
 
+    /** Removes a leading subject code from a title. */
     private function stripSubjectCode(string $subject): string
     {
         $patterns = [

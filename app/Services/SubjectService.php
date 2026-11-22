@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SubjectService
 {
+    /** Initializes the SubjectService dependencies. */
     public function __construct(
         private readonly SubjectRepositoryInterface $subjects,
         private readonly TaskRepositoryInterface $tasks,
     ) {}
 
+    /** Returns the list of records for a user. */
     public function list(int $userId): Collection
     {
         $subjects = $this->subjects->allForUser($userId);
@@ -55,16 +57,19 @@ class SubjectService
         return $subjects;
     }
 
+    /** Finds one record owned by a user. */
     public function find(int $subjectId, int $userId): ?Subject
     {
         return $this->subjects->findForUser($subjectId, $userId);
     }
 
+    /** Creates a new record for a user. */
     public function create(int $userId, array $data): Subject
     {
         return $this->subjects->create($userId, $data);
     }
 
+    /** Updates a record owned by the authenticated user. */
     public function update(int $subjectId, int $userId, array $data): ?Subject
     {
         $subject = $this->subjects->findForUser($subjectId, $userId);
@@ -76,6 +81,7 @@ class SubjectService
         return $this->subjects->update($subject, $data);
     }
 
+    /** Deletes a record owned by a user. */
     public function delete(int $subjectId, int $userId): bool
     {
         $subject = $this->subjects->findForUser($subjectId, $userId);
